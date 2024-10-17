@@ -1,0 +1,10 @@
+HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+if (response.statusCode() == 200) {
+    String jsonData = response.body();
+    System.out.println("Dados recebidos com sucesso!");
+    System.out.println("Cabeçalhos da resposta: " + response.headers());
+} else {
+    System.out.println("Erro na requisição da API: " + response.statusCode());
+    System.out.println("Mensagem de erro: " + response.body());
+}
