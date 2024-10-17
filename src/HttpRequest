@@ -1,0 +1,14 @@
+HttpRequest request = HttpRequest.newBuilder()
+        .uri(URI.create(API_URL))
+        .header("Accept", "application/json") // Exemplo de cabeçalho
+        .timeout(Duration.ofSeconds(10)) // Timeout de 10 segundos
+        .build();
+
+
+String jsonRequestBody = "{ \"key\": \"value\" }"; // Exemplo de corpo JSON
+
+HttpRequest request = HttpRequest.newBuilder()
+        .uri(URI.create("https://api.exemplo.com/post-endpoint"))
+        .header("Content-Type", "application/json")
+        .POST(HttpRequest.BodyPublishers.ofString(jsonRequestBody))
+        .build();
