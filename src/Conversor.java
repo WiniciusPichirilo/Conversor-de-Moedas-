@@ -1,85 +1,52 @@
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import java.util.Scanner;
+import java.util.Set;
 
-public class Conversor {
-    private static final String API_URL = "https://api.exchangerate-api.com/v4/latest/USD";
+public class Moedas {
+    private static final String API_KEY = "4da70373bd7d81457f51905e"; // Sua chave de API
+    private static final String API_URL = "https://api.exchangerate-api.com/v4/latest/USD?access_key=" + API_KEY;
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Bem-vindo ao Conversor de Moedas!");
-        System.out.println("Escolha uma conversão:");
-        System.out.println("1. USD para BRL");
-        System.out.println("2. BRL para USD");
-        System.out.println("3. USD para EUR");
-        System.out.println("4. EUR para USD");
-        System.out.println("5. JPY para BRL");
-        System.out.println("6. BRL para JPY");
-
-        int choice = scanner.nextInt();
-        String fromCurrency = "", toCurrency = "";
-
-        switch (choice) {
-            case 1: fromCurrency = "USD"; toCurrency = "BRL"; break;
-            case 2: fromCurrency = "BRL"; toCurrency = "USD"; break;
-            case 3: fromCurrency = "USD"; toCurrency = "EUR"; break;
-            case 4: fromCurrency = "EUR"; toCurrency = "USD"; break;
-            case 5: fromCurrency = "JPY"; toCurrency = "BRL"; break;
-            case 6: fromCurrency = "BRL"; toCurrency = "JPY"; break;
-            default: System.out.println("Escolha inválida!"); return;
-        }
-
-        double rate = getExchangeRate(fromCurrency, toCurrency);
-        if (rate != -1) {
-            System.out.println("Digite o valor que deseja converter:");
-            double amount = scanner.nextDouble();
-            double convertedAmount = amount * rate;
-            System.out.printf("O valor convertido de %s para %s é: %.2f %s\n", amount, fromCurrency, convertedAmount, toCurrency);
-        } else {
-            System.out.println("Erro ao obter taxas.");
-        }
-
-        scanner.close();
-    }
-
-    public static double getExchangeRate(String fromCurrency, String toCurrency) {
+    public JsonObject obterTodasAsTaxas() {
         try {
-            String jsonResponse = getRates();
-            JsonObject jsonObject = JsonParser.parseString(jsonResponse).getAsJsonObject();
-            JsonObject rates = jsonObject.getAsJsonObject("rates");
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder().url(API_URL).build();
+            Response response = client.newCall(request).execute();
 
-            double fromRate = rates.get(fromCurrency).getAsDouble();
-            double toRate = rates.get(toCurrency).getAsDouble();
-
-            return toRate / fromRate;
+            if (response.isSuccessful()) {
+                String jsonData = response.body().string();
+                JsonObject jsonObject = JsonParser.parseString(jsonData).getAsJsonObject();
+                return jsonObject.getAsJsonObject("rates");
+            } else {
+                System.out.println("Erro na requisição da API");
+                return null;
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    public double obterTaxaDeCambio(String moedaDestino) {
+        JsonObject rates = obterTodasAsTaxas();
+        if (rates != null && rates.has(moedaDestino)) {
+            return rates.get(moedaDestino).getAsDouble();
+        } else {
+            System.out.println("Moeda não encontrada.");
             return -1;
         }
     }
 
-    public static String getRates() {
-        try {
-            URL url = new URL(API_URL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
+    public void listarMoedas() {
+        JsonObject rates = obterTodasAsTaxas();
+        if (rates != null) {
+            Set<String> moedas = rates.keySet();
+            System.out.println("Moedas disponíveis para conversão:");
+            for (String moeda : moedas) {
+                System.out.println(moeda);
             }
-            in.close();
-            return response.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
         }
     }
 }
