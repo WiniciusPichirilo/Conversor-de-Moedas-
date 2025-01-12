@@ -12,8 +12,7 @@ O Conversor de Moedas é uma aplicação Java que permite aos usuários converte
 - [Pré-requisitos](#pré-requisitos)
 - [Instalação](#instalação)
 - [Como Usar](#como-usar)
-- [Funcionalidades](#funcionalidades)
-- [Contribuição](#contribuição)
+- [Apresentação](#Quem-sou)
 - [Licença](#licença)
 
 
@@ -43,19 +42,16 @@ Para iniciar o projeto, execute o seguinte comando:
 java -jar target/conversor-moedas-1.0-SNAPSHOT.jar
 
 
-## Funcionalidades
-- Conversão de mais de 160 moedas diferentes.
-- Atualização automática das taxas de câmbio.
-- Interface simples e interativa no console.
+## Apresentação
+
+Olá! Meu nome é Winicius Pichirilo, desenvolvedor e entusiasta em tecnologia com foco em soluções práticas e eficientes. Esse projeto foi uma oportunidade de explorar e aplicar conhecimentos em Java, manipulação de APIs, e boas práticas no desenvolvimento de software. Busco sempre aprender e compartilhar projetos que possam contribuir para a comunidade de tecnologia.
+
+Você pode me encontrar no [GitHub](https://github.com/WiniciusPichirilo) para conferir outros projetos ou entrar em contato!
+
+Obrigado por visitar o repositório!
 
 
-## Contribuição
-Se você deseja contribuir com este projeto, siga as instruções abaixo:
-1. Faça um fork do projeto.
-2. Crie uma nova branch (`git checkout -b minha-nova-feature`).
-3. Commit suas mudanças (`git commit -am 'Adicionei uma nova feature'`).
-4. Faça um push para a branch (`git push origin minha-nova-feature`).
-5. Crie uma Pull Request.
+
 
 
 ## Licença
